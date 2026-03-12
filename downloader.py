@@ -31,7 +31,8 @@ def start_conversion(
             "FFmpeg is not installed. Install FFmpeg first, then try again."
         )
 
-    if shutil.which("yt-dlp") is None:
+    yt_dlp_binary = _yt_dlp_binary()
+    if yt_dlp_binary is None:
         raise ToolMissingError(
             "yt-dlp is not installed or not on your PATH. Install it first, then try again."
         )
@@ -44,6 +45,7 @@ def start_conversion(
     try:
         progress_callback("running", "Contacting the video site...", 8.0)
         _download_with_cli(
+            yt_dlp_binary=yt_dlp_binary,
             video_url=video_url,
             output_name=output_name,
             bitrate=bitrate,
@@ -52,6 +54,7 @@ def start_conversion(
             progress_callback=progress_callback,
         )
     except subprocess.CalledProcessError as exc:
+        _cleanup_partial_files(downloads_dir, output_name)
         raise ConversionError(_friendly_download_error(exc)) from exc
 
     if not final_path.exists():
@@ -66,6 +69,7 @@ def start_conversion(
 
 def _download_with_cli(
     *,
+    yt_dlp_binary: str,
     video_url: str,
     output_name: str,
     bitrate: str,
@@ -75,7 +79,7 @@ def _download_with_cli(
 ) -> None:
     output_template = str(downloads_dir / f"{output_name}.%(ext)s")
     base_command = [
-        "yt-dlp",
+        yt_dlp_binary,
         "--newline",
         "--progress",
         "--no-playlist",
@@ -161,6 +165,26 @@ def _extract_percent(line: str) -> float | None:
 
 def _is_youtube_url(url: str) -> bool:
     return "youtube.com/" in url or "youtu.be/" in url
+
+
+def _yt_dlp_binary() -> str | None:
+    preferred_paths = [
+        "/opt/homebrew/bin/yt-dlp",
+        shutil.which("yt-dlp"),
+    ]
+    for candidate in preferred_paths:
+        if candidate and Path(candidate).exists():
+            return candidate
+    return None
+
+
+def _cleanup_partial_files(downloads_dir: Path, output_name: str) -> None:
+    for pattern in (f"{output_name}*.part", f"{output_name}*.ytdl"):
+        for path in downloads_dir.glob(pattern):
+            try:
+                path.unlink()
+            except OSError:
+                pass
 
 
 def _friendly_download_error(error: Exception) -> str:
