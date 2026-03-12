@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import threading
 import uuid
 from pathlib import Path
@@ -11,12 +12,21 @@ from downloader import ConversionError, ToolMissingError, start_conversion
 from validators import ALLOWED_BITRATES, validate_filename, validate_url
 
 
-BASE_DIR = Path(__file__).resolve().parent
-DOWNLOADS_DIR = BASE_DIR / "downloads"
+if getattr(sys, "frozen", False):
+    APP_ROOT = Path(sys.executable).resolve().parents[1]
+    RESOURCES_DIR = APP_ROOT / "Resources"
+    DOWNLOADS_DIR = Path.home() / "Downloads" / "Video to MP3 Studio"
+else:
+    RESOURCES_DIR = Path(__file__).resolve().parent
+    DOWNLOADS_DIR = RESOURCES_DIR / "downloads"
 
 
 def create_app() -> Flask:
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        template_folder=str(RESOURCES_DIR / "templates"),
+        static_folder=str(RESOURCES_DIR / "static"),
+    )
     app.config["DOWNLOADS_DIR"] = DOWNLOADS_DIR
     app.config["JOBS"] = {}
     app.config["MAX_CONTENT_LENGTH"] = 1024 * 32

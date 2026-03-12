@@ -94,6 +94,31 @@ Then open this address in your browser:
 http://127.0.0.1:5001
 ```
 
+## Build a double-clickable Mac app
+
+This project also includes a native Mac launcher app. It starts the local server for you and opens the converter in your browser.
+
+Build it with:
+
+```bash
+cd /Users/l.eatonnortheastern.edu/Documents/Music/video-to-mp3-studio
+source .venv/bin/activate
+pip install py2app
+python3 setup.py py2app
+```
+
+After the build finishes, open:
+
+```text
+dist/Video to MP3 Studio.app
+```
+
+When you use the packaged Mac app, converted files are saved here:
+
+```text
+~/Downloads/Video to MP3 Studio
+```
+
 ## Step 5: run tests
 
 ```bash
