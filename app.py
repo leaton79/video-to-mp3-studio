@@ -21,6 +21,8 @@ else:
     DOWNLOADS_DIR = RESOURCES_DIR / "downloads"
 
 COOKIES_DIR = Path.home() / "Documents" / "Video to MP3 Studio"
+DOWNLOADS_DIR = Path(os.environ.get("VIDEO_TO_MP3_DOWNLOADS_DIR", str(DOWNLOADS_DIR))).expanduser()
+COOKIES_DIR = Path(os.environ.get("VIDEO_TO_MP3_COOKIES_DIR", str(COOKIES_DIR))).expanduser()
 
 
 def create_app() -> Flask:

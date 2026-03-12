@@ -10,6 +10,8 @@ LOG_FILE="$LOG_DIR/app.log"
 PID_FILE="$HOME/Library/Application Support/VideoToMP3Studio/server.pid"
 PYTHON_BIN="/opt/homebrew/bin/python3"
 PYTHON_SITE_PACKAGES="$PROJECT_DIR/.venv/lib/python3.14/site-packages"
+DOWNLOADS_DIR="$HOME/Downloads/Video to MP3 Studio"
+COOKIES_DIR="$HOME/Documents/Video to MP3 Studio"
 
 mkdir -p "$LOG_DIR"
 mkdir -p "$(dirname "$PID_FILE")"
@@ -30,7 +32,10 @@ wait_for_server() {
 
 start_server() {
   cd "$PROJECT_DIR"
-  PYTHONPATH="$PYTHON_SITE_PACKAGES" nohup "$PYTHON_BIN" "$APP_SCRIPT" >>"$LOG_FILE" 2>&1 &
+  PYTHONPATH="$PYTHON_SITE_PACKAGES" \
+  VIDEO_TO_MP3_DOWNLOADS_DIR="$DOWNLOADS_DIR" \
+  VIDEO_TO_MP3_COOKIES_DIR="$COOKIES_DIR" \
+  nohup "$PYTHON_BIN" "$APP_SCRIPT" >>"$LOG_FILE" 2>&1 &
   echo $! >"$PID_FILE"
 }
 

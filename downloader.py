@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 import shutil
 from pathlib import Path
@@ -108,12 +109,16 @@ def _download_with_cli(
 
 
 def _run_command(command: list[str], progress_callback: ProgressCallback) -> tuple[int, str]:
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
         bufsize=1,
+        env=env,
     )
 
     combined_output: list[str] = []
