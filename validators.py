@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 
 ALLOWED_BITRATES = ["128", "192", "256", "320"]
@@ -19,6 +20,30 @@ def validate_url(value: str) -> str | None:
 
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         return "Enter a valid http or https URL."
+
+    hostname = parsed.netloc.lower()
+    if "youtube.com" in hostname or "youtu.be" in hostname:
+        youtube_error = _validate_youtube_url(parsed)
+        if youtube_error:
+            return youtube_error
+
+    return None
+
+
+def _validate_youtube_url(parsed) -> str | None:
+    video_id = None
+    hostname = parsed.netloc.lower()
+
+    if "youtu.be" in hostname:
+        video_id = parsed.path.strip("/").split("/")[0]
+    else:
+        video_id = parse_qs(parsed.query).get("v", [""])[0]
+
+    if not video_id:
+        return "This YouTube link is missing the video ID."
+
+    if not re.fullmatch(r"[\w-]{11}", video_id):
+        return "This YouTube link looks incomplete. The video ID should be 11 characters."
 
     return None
 

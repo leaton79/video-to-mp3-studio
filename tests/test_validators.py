@@ -9,6 +9,13 @@ def test_validate_url_accepts_https():
     assert validate_url("https://example.com/watch?v=abc") is None
 
 
+def test_validate_url_rejects_incomplete_youtube_id():
+    assert (
+        validate_url("https://www.youtube.com/watch?v=Rel6gvzVPOY8")
+        == "This YouTube link looks incomplete. The video ID should be 11 characters."
+    )
+
+
 def test_validate_filename_rejects_bad_characters():
     assert validate_filename('bad/name') == 'Do not use these characters: < > : " / \\ | ? *'
 

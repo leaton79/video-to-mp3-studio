@@ -83,9 +83,7 @@ def start_conversion(
         with YoutubeDL(ydl_options) as ydl:
             ydl.download([video_url])
     except DownloadError as exc:
-        raise ConversionError(
-            "Download failed. Check the URL, confirm the site is supported, and try again."
-        ) from exc
+        raise ConversionError(_friendly_download_error(exc)) from exc
 
     if not final_path.exists():
         matches = list(downloads_dir.glob(f"{output_name}*.mp3"))
@@ -108,3 +106,17 @@ def _postprocessor_hook(progress_callback: ProgressCallback):
             progress_callback("running", "Finalizing your file...", 98.0)
 
     return hook
+
+
+def _friendly_download_error(error: Exception) -> str:
+    message = str(error).strip()
+    if "ERROR:" in message:
+        message = message.split("ERROR:", 1)[1].strip()
+
+    if "Video unavailable" in message:
+        return "Video unavailable. Double-check the video link. For YouTube, the video ID must be exactly 11 characters."
+
+    if message:
+        return f"Download failed: {message}"
+
+    return "Download failed. Check the URL, confirm the site is supported, and try again."

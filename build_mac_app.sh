@@ -30,6 +30,8 @@ cp "$ICON_PNG" "$ICONSET_DIR/icon_512x512@2x.png"
 /usr/bin/osacompile -o "$APP_PATH" "$PROJECT_DIR/launcher.applescript"
 
 cp "$ICON_ICNS" "$APP_PATH/Contents/Resources/applet.icns"
+cp "$PROJECT_DIR/launcher.sh" "$APP_PATH/Contents/Resources/launcher.sh"
+chmod +x "$APP_PATH/Contents/Resources/launcher.sh"
 PLIST="$APP_PATH/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile applet" "$PLIST" || /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string applet" "$PLIST"
 /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier com.leaton79.videotomp3studio.launcher" "$PLIST" || /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string com.leaton79.videotomp3studio.launcher" "$PLIST"
