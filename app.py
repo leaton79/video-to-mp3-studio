@@ -16,9 +16,11 @@ if getattr(sys, "frozen", False):
     APP_ROOT = Path(sys.executable).resolve().parents[1]
     RESOURCES_DIR = APP_ROOT / "Resources"
     DOWNLOADS_DIR = Path.home() / "Downloads" / "Video to MP3 Studio"
+    COOKIES_DIR = Path.home() / "Documents" / "Video to MP3 Studio"
 else:
     RESOURCES_DIR = Path(__file__).resolve().parent
     DOWNLOADS_DIR = RESOURCES_DIR / "downloads"
+    COOKIES_DIR = RESOURCES_DIR / "cookies"
 
 
 def create_app() -> Flask:
@@ -28,10 +30,12 @@ def create_app() -> Flask:
         static_folder=str(RESOURCES_DIR / "static"),
     )
     app.config["DOWNLOADS_DIR"] = DOWNLOADS_DIR
+    app.config["COOKIES_DIR"] = COOKIES_DIR
     app.config["JOBS"] = {}
     app.config["MAX_CONTENT_LENGTH"] = 1024 * 32
 
     DOWNLOADS_DIR.mkdir(exist_ok=True)
+    COOKIES_DIR.mkdir(parents=True, exist_ok=True)
 
     @app.get("/")
     def index():
@@ -41,15 +45,15 @@ def create_app() -> Flask:
     def health():
         ffmpeg_found = bool(_which("ffmpeg"))
         yt_dlp_cli_found = bool(_which("yt-dlp"))
-        yt_dlp_python_found = _python_package_available("yt_dlp")
+        youtube_cookies_found = (COOKIES_DIR / "youtube-cookies.txt").exists()
         return jsonify(
             {
                 "status": "ok",
                 "tools": {
                     "ffmpeg": ffmpeg_found,
-                    "yt_dlp": yt_dlp_cli_found and yt_dlp_python_found,
+                    "yt_dlp": yt_dlp_cli_found,
                     "yt_dlp_cli": yt_dlp_cli_found,
-                    "yt_dlp_python": yt_dlp_python_found,
+                    "youtube_cookies": youtube_cookies_found,
                 },
             }
         )
@@ -133,6 +137,7 @@ def _run_job(app: Flask, job_id: str, video_url: str, output_name: str, bitrate:
                 output_name=output_name,
                 bitrate=bitrate,
                 downloads_dir=app.config["DOWNLOADS_DIR"],
+                cookies_dir=app.config["COOKIES_DIR"],
                 progress_callback=update,
             )
         except ToolMissingError as exc:
@@ -164,14 +169,6 @@ def _which(command: str) -> str | None:
         if candidate.exists() and os.access(candidate, os.X_OK):
             return str(candidate)
     return None
-
-
-def _python_package_available(module_name: str) -> bool:
-    try:
-        __import__(module_name)
-    except ImportError:
-        return False
-    return True
 
 
 app = create_app()

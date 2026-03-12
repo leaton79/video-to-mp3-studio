@@ -11,6 +11,8 @@ def test_health_endpoint_returns_json():
     data = response.get_json()
     assert data["status"] == "ok"
     assert "ffmpeg" in data["tools"]
+    assert data["tools"]["yt_dlp_cli"] in {True, False}
+    assert data["tools"]["youtube_cookies"] in {True, False}
 
 
 def test_create_job_rejects_invalid_payload():

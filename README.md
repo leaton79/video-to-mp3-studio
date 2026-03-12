@@ -134,9 +134,22 @@ pytest
 2. Paste a supported video URL.
 3. Pick a bitrate.
 4. Type the output file name you want.
-5. Click `Download and convert`.
-6. Wait for the status box to show progress.
-7. Find the MP3 in the local `downloads/` folder.
+5. For YouTube, place a cookies file at `cookies/youtube-cookies.txt`.
+6. Click `Download and convert`.
+7. Wait for the status box to show progress.
+8. Find the MP3 in the local `downloads/` folder.
+
+## YouTube cookies file
+
+This app avoids Keychain access. For YouTube downloads, it reads a manual cookies file instead.
+
+Put your file here:
+
+```text
+/Users/l.eatonnortheastern.edu/Documents/Music/video-to-mp3-studio/cookies/youtube-cookies.txt
+```
+
+The file should be in Netscape `cookies.txt` format.
 
 ## Troubleshooting
 
@@ -178,6 +191,7 @@ Possible causes:
 - The platform changed how its pages work
 - The platform blocks this content
 - The content is private, deleted, age-restricted, or region-locked
+- For YouTube, `cookies/youtube-cookies.txt` is missing or expired
 
 ### The app says the file already exists
 

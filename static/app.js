@@ -39,9 +39,9 @@ async function loadToolStatus() {
     const response = await fetch("/api/health");
     const data = await response.json();
     const ffmpegText = data.tools.ffmpeg ? "FFmpeg ready" : "Install FFmpeg";
-    const ytdlpCliText = data.tools.yt_dlp_cli ? "yt-dlp command ready" : "Install yt-dlp command";
-    const ytdlpPythonText = data.tools.yt_dlp_python ? "Python package ready" : "Install Python packages";
-    toolStatus.textContent = `${ffmpegText} • ${ytdlpCliText} • ${ytdlpPythonText}`;
+    const ytdlpCliText = data.tools.yt_dlp_cli ? "yt-dlp ready" : "Install yt-dlp";
+    const cookiesText = data.tools.youtube_cookies ? "YouTube cookies ready" : "Add YouTube cookies file";
+    toolStatus.textContent = `${ffmpegText} • ${ytdlpCliText} • ${cookiesText}`;
   } catch (error) {
     toolStatus.textContent = "Could not check local tools";
   }
