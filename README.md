@@ -146,7 +146,7 @@ This app avoids Keychain access. For YouTube downloads, it reads a manual cookie
 Put your file here:
 
 ```text
-/Users/l.eatonnortheastern.edu/Documents/Music/video-to-mp3-studio/cookies/youtube-cookies.txt
+/Users/l.eatonnortheastern.edu/Documents/Video to MP3 Studio/youtube-cookies.txt
 ```
 
 The file should be in Netscape `cookies.txt` format.

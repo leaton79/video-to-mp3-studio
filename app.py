@@ -16,11 +16,11 @@ if getattr(sys, "frozen", False):
     APP_ROOT = Path(sys.executable).resolve().parents[1]
     RESOURCES_DIR = APP_ROOT / "Resources"
     DOWNLOADS_DIR = Path.home() / "Downloads" / "Video to MP3 Studio"
-    COOKIES_DIR = Path.home() / "Documents" / "Video to MP3 Studio"
 else:
     RESOURCES_DIR = Path(__file__).resolve().parent
     DOWNLOADS_DIR = RESOURCES_DIR / "downloads"
-    COOKIES_DIR = RESOURCES_DIR / "cookies"
+
+COOKIES_DIR = Path.home() / "Documents" / "Video to MP3 Studio"
 
 
 def create_app() -> Flask:
