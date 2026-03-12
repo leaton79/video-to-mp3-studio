@@ -7,6 +7,7 @@ APP_URL="http://127.0.0.1:5001"
 LOG_DIR="$HOME/Library/Logs/VideoToMP3Studio"
 LOG_FILE="$LOG_DIR/app.log"
 PID_FILE="$HOME/Library/Application Support/VideoToMP3Studio/server.pid"
+PYTHON_BIN="$PROJECT_DIR/.venv/bin/python3"
 
 mkdir -p "$LOG_DIR"
 mkdir -p "$(dirname "$PID_FILE")"
@@ -17,8 +18,7 @@ is_running() {
 
 start_server() {
   cd "$PROJECT_DIR"
-  source .venv/bin/activate
-  nohup python3 app.py >>"$LOG_FILE" 2>&1 &
+  nohup "$PYTHON_BIN" app.py >>"$LOG_FILE" 2>&1 &
   echo $! >"$PID_FILE"
 }
 
