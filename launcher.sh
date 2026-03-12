@@ -3,6 +3,7 @@
 set -euo pipefail
 
 PROJECT_DIR="/Users/l.eatonnortheastern.edu/Documents/Music/video-to-mp3-studio"
+APP_SCRIPT="$PROJECT_DIR/app.py"
 APP_URL="http://127.0.0.1:5001"
 LOG_DIR="$HOME/Library/Logs/VideoToMP3Studio"
 LOG_FILE="$LOG_DIR/app.log"
@@ -29,7 +30,7 @@ wait_for_server() {
 
 start_server() {
   cd "$PROJECT_DIR"
-  PYTHONPATH="$PYTHON_SITE_PACKAGES" nohup "$PYTHON_BIN" app.py >>"$LOG_FILE" 2>&1 &
+  PYTHONPATH="$PYTHON_SITE_PACKAGES" nohup "$PYTHON_BIN" "$APP_SCRIPT" >>"$LOG_FILE" 2>&1 &
   echo $! >"$PID_FILE"
 }
 
