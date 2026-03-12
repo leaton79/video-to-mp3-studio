@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video to MP3 Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Local audio converter</p>
+          <h1>Video to MP3 Studio</h1>
+          <p class="lede">
+            Paste a supported video link, choose an MP3 bitrate, rename the file,
+            and let the app handle the rest with clear status updates.
+          </p>
+        </div>
+
+        <div class="status-chip" id="toolStatus">Checking tools...</div>
+      </section>
+
+      <section class="panel-grid">
+        <article class="card">
+          <h2>Convert a video</h2>
+          <form id="converterForm" novalidate>
+            <label for="video_url">Video URL</label>
+            <input
+              id="video_url"
+              name="video_url"
+              type="url"
+              placeholder="https://www.youtube.com/watch?v=example"
+              autocomplete="off"
+            />
+            <p class="field-error" id="video_url_error"></p>
+
+            <label for="bitrate">MP3 bitrate</label>
+            <select id="bitrate" name="bitrate">
+              {% for bitrate in bitrates %}
+              <option value="{{ bitrate }}" {% if bitrate == "192" %}selected{% endif %}>
+                {{ bitrate }} kbps
+              </option>
+              {% endfor %}
+            </select>
+            <p class="field-error" id="bitrate_error"></p>
+
+            <label for="output_name">Output file name</label>
+            <input
+              id="output_name"
+              name="output_name"
+              type="text"
+              maxlength="120"
+              placeholder="my-audio-track"
+              autocomplete="off"
+            />
+            <p class="field-error" id="output_name_error"></p>
+
+            <button id="submitButton" type="submit">Download and convert</button>
+          </form>
+        </article>
+
+        <article class="card card-status">
+          <h2>Status</h2>
+          <div class="status-box" id="statusBox">
+            <p class="status-label" id="statusLabel">Ready</p>
+            <p class="status-message" id="statusMessage">
+              Fill in the form, then click the button to start.
+            </p>
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p class="helper-text">
+              Converted files are saved in the local <strong>downloads</strong> folder
+              inside this project.
+            </p>
+          </div>
+
+          <div class="lawful-note">
+            <h3>Use responsibly</h3>
+            <p>
+              Only download or convert content you have the right to use. Platform
+              terms and copyright rules still apply.
+            </p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
