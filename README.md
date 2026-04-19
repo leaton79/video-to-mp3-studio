@@ -1,5 +1,7 @@
 # Video to MP3 Studio
 
+**Notice:** This project was created with the assistance of GenAI tools. It should be carefully reviewed and independently inspected before being used in any production, security-sensitive, or otherwise critical context.
+
 Video to MP3 Studio is a beginner-friendly local app that converts supported video URLs into MP3 files with a simple, polished web interface that runs on your own computer.
 
 ## What this app does
